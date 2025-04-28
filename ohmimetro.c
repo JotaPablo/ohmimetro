@@ -7,7 +7,7 @@
 #include "pico/bootrom.h"
 #include "lib/neopixel.h"
 
-#define ADC_PIN 28 // GPIO para o voltímetro
+#define ADC_PIN 28 // GPIO para o ohmimetro
 
 // Definições de botões
 #define BUTTON_JOYSTICK 22
