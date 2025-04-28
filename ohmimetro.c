@@ -13,8 +13,8 @@
 #define BUTTON_A 5
 #define BUTTON_B 6
 #define BUTTON_JOYSTICK 22
-
-int R_conhecido = 10000;   // Resistor de 10k ohm
+                
+int R_conhecido = 9870;   // Resistor de 9.87k ohm
 float R_x = 0.0;           // Resistor desconhecido
 float ADC_VREF = 3.31;     // Tensão de referência do ADC
 int ADC_RESOLUTION = 4095; // Resolução do ADC (12 bits)
@@ -41,7 +41,7 @@ Cor cores[] = {
     {"Preto",    5, 0,   0,   0},  // 0
     {"Marrom",   6, 18,  6,   0},  // 1
     {"Vermelho", 8, 25,  0,   0},  // 2
-    {"Laranja",  7, 12,  1,   0},  // 3
+    {"Laranja",  7, 13,  2,   0},  // 3
     {"Amarelo",  7, 25,  25,  0},  // 4
     {"Verde",    5, 0,   25,  0},  // 5
     {"Azul",     4, 0,   0,   25}, // 6
@@ -55,7 +55,7 @@ ssd1306_t ssd; //Estrutura do display
 //Prototipos de funções
 void setup();
 void display_init();
-static void gpio_button_joystick_handler(uint gpio, uint32_t events);
+static void gpio_button_joystick_handler(uint gpio, uint32_t events); // Para ativar modo bootsell
 
 void atualiza_display(float resistencia, float resistencia_e24, float adc);
 float ler_adc();
@@ -67,21 +67,24 @@ uint8_t faixa1, faixa2, multiplicador;
 int main()
 {
     setup();
-    adc_select_input(2); // Seleciona o canal 2
-    float adc = 0;
-    float resistencia = 500;
+    float adc;
+    float resistencia;
     float resistencia_e24;
 
-    while (true) {
-        //adc = ler_adc();
-        //resistencia = (R_conhecido * adc) / (ADC_RESOLUTION - adc);
+    adc_select_input(2); // Seleciona o canal 2
 
-        
+    while (true) {
+        adc = ler_adc();
+        resistencia = (R_conhecido * adc) / (ADC_RESOLUTION - adc);
         resistencia_e24 = encontraProximoE24(resistencia);
+
+        printf("\nResistencia(E24): %f\n", resistencia_e24);
+        printf("Faixa 1: %d\n", faixa1);
+        printf("Faixa 1: %d\n", faixa2);
+        printf("Multiplicador 1: %d\n\n", multiplicador);
+
         atualiza_display(resistencia, resistencia_e24, adc);
         mostra_faixa_matriz();
-        resistencia = (resistencia + 100);
-        if(resistencia > 20000) resistencia = 500;
         sleep_ms(1000);
     }
 }
@@ -104,7 +107,7 @@ float encontraProximoE24(float resistencia) {
     int expoenteDez = 0;
     float resNorm = resistencia;
 
-    // traz resNorm para [1.0, 10.0)
+    // traz resNorm para (1.0, 10.0)
     while (resNorm >= 10.0f) { 
         resNorm /= 10.0f; 
         expoenteDez++; 
@@ -201,7 +204,6 @@ void atualiza_display(float resistencia, float resistencia_e24, float adc){
     ssd1306_draw_string(&ssd, "M.", 3 , 54);
     ssd1306_draw_string(&ssd, cores[multiplicador].nome, (128 - cores[multiplicador].tamanho * 8)/2, 54); 
 
-    
 
     ssd1306_send_data(&ssd);   
 }
@@ -217,8 +219,9 @@ void setup(){
     display_init();
 
     adc_init();
-    
-    adc_gpio_init(28);  
+    adc_gpio_init(26); 
+    adc_gpio_init(27); 
+    adc_gpio_init(ADC_PIN);  
 
     //Configuração dos Botões
     gpio_init(BUTTON_A);
@@ -246,8 +249,6 @@ void display_init(){
   gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
   gpio_pull_up(I2C_SDA); // Ativa pull-ups internos
   gpio_pull_up(I2C_SCL);
-
-
 
   // Inicialização do controlador SSD1306
   ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT);
