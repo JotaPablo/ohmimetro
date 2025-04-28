@@ -10,13 +10,10 @@
 #define ADC_PIN 28 // GPIO para o voltímetro
 
 // Definições de botões
-#define BUTTON_A 5
-#define BUTTON_B 6
 #define BUTTON_JOYSTICK 22
                 
 int R_conhecido = 9870;   // Resistor de 9.87k ohm
 float R_x = 0.0;           // Resistor desconhecido
-float ADC_VREF = 3.31;     // Tensão de referência do ADC
 int ADC_RESOLUTION = 4095; // Resolução do ADC (12 bits)
 
 char str_resistencia[6]; // Buffer para armazenar a string
@@ -112,11 +109,7 @@ float encontraProximoE24(float resistencia) {
         resNorm /= 10.0f; 
         expoenteDez++; 
     }
-    while (resNorm < 1.0f) { 
-        resNorm *= 10.0f; 
-        expoenteDez--; 
-    }
-
+    
     // procura o índice do valor E24 mais próximo
     int indiceMelhor = 0;
     float menorDif = fabsf(resNorm - E24[0]);
@@ -224,14 +217,6 @@ void setup(){
     adc_gpio_init(ADC_PIN);  
 
     //Configuração dos Botões
-    gpio_init(BUTTON_A);
-    gpio_set_dir(BUTTON_A, GPIO_IN);
-    gpio_pull_up(BUTTON_A);
-
-    gpio_init(BUTTON_B);
-    gpio_set_dir(BUTTON_B, GPIO_IN);
-    gpio_pull_up(BUTTON_B);
-
     gpio_init(BUTTON_JOYSTICK);
     gpio_set_dir(BUTTON_JOYSTICK, GPIO_IN);
     gpio_pull_up(BUTTON_JOYSTICK);
