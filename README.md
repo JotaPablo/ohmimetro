@@ -2,7 +2,7 @@
 
 Um sistema de medição de resistores utilizando a plataforma BitDogLab, capaz de calcular o valor aproximado da resistência, identificar o valor comercial E24 mais próximo, e exibir as faixas de cores correspondentes.
 ## Vídeo Demonstrativo
-[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/JN6O4QZe8Xc/hqdefault.jpg)](https://youtu.be/JN6O4QZe8Xc)
+[![Assista ao vídeo no YouTube](https://img.youtube.com/vi/HY4chSQSjx0/hqdefault.jpg)](https://youtu.be/HY4chSQSjx0)
 
 ## Funcionalidades Principais
 
