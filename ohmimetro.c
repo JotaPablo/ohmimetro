@@ -116,7 +116,7 @@ float encontraProximoE24(float resistencia) {
     for (int i = 1; i < E24_SIZE; i++) {
         float dif = fabsf(resNorm - E24[i]);
         if (dif < menorDif) {
-            menorDif     = dif;
+            menorDif = dif;
             indiceMelhor = i;
         }
     }
@@ -130,8 +130,8 @@ float encontraProximoE24(float resistencia) {
 
     // calcula as duas primeiras faixas (dois dígitos) e o multiplicador
     int doisDigitos = (int)(E24[indiceMelhor] * 10.0f + 0.5f); // ex: 2.2 → 22
-    faixa1        = doisDigitos / 10;
-    faixa2        = doisDigitos % 10;
+    faixa1 = doisDigitos / 10;
+    faixa2 = doisDigitos % 10;
     multiplicador = expoenteDez - 1;
 
     // reconstrói e retorna o valor comercial completo
